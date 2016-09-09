@@ -19,6 +19,7 @@ test_report_suite = 'omniture.api-gateway'
 
 class ReportTest(unittest.TestCase):
     def setUp(self):
+        self.maxDiff = None
         with requests_mock.mock() as m:
             path = os.path.dirname(__file__)
             #read in mock response for Company.GetReportSuites to make tests faster
@@ -249,7 +250,28 @@ class ReportTest(unittest.TestCase):
         self.assertTrue('evar3 | Classification 1' in report.data[0], "The Value of report.data[0] was:{}".format(report.data[0]))
         self.assertTrue('evar5' in report.data[0], "The Value of report.data[0] was:{}".format(report.data[0]))
 
+    @requests_mock.mock()
+    def test_repr_html_(self,m):
+        path = os.path.dirname(__file__)
 
+        with open(path+'/mock_objects/trended_report.json') as data_file:
+            json_response = data_file.read()
+
+        with open(path+'/mock_objects/Report.Queue.json') as queue_file:
+            report_queue = queue_file.read()
+
+        with open(path+'/mock_objects/trended_report.html') as basic_html_file:
+            basic_html = basic_html_file.read()
+
+        #setup mock object
+        m.post('https://api.omniture.com/admin/1.4/rest/?method=Report.Get', text=json_response)
+        m.post('https://api.omniture.com/admin/1.4/rest/?method=Report.Queue', text=report_queue)
+
+        trended = self.analytics.suites[test_report_suite].report\
+            .element("page").metric("pageviews").granularity('hour').run()
+
+
+        self.assertEqual(trended._repr_html_(),basic_html)
 
 if __name__ == '__main__':
     unittest.main()

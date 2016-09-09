@@ -222,7 +222,7 @@ class Report(object):
                 html += "<tr>"
                 if 'datetime' in item:
                     html += "<td><b>{0}<b></td>".format('datetime')
-                for key in item:
+                for key in sorted(list(item.keys())):
                     if key != 'datetime':
                         html += "<td><b>{0}<b></td>".format(key)
                 html += "</tr><tr>"
@@ -230,9 +230,10 @@ class Report(object):
             #Make sure date time is alway listed first
             if 'datetime' in item:
                 html += "<td>{0}</td>".format(item['datetime'])
-            for key, value in item.iteritems():
+            for key, value in sorted(list(item.items())):
                 if key != 'datetime':
                     html += "<td>{0}</td>".format(value)
+        html += "</html>"
         return html
 
     def __str__(self):

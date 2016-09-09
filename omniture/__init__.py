@@ -11,7 +11,7 @@ from .elements import Value
 from .query import Query
 from .reports import InvalidReportError, Report, DataWarehouseReport
 from .version import __version__
-from .utils import *
+from .utils import AddressableList, affix
 
 
 def authenticate(username, secret=None, endpoint=Account.DEFAULT_ENDPOINT, prefix='', suffix=''):
@@ -23,8 +23,8 @@ def authenticate(username, secret=None, endpoint=Account.DEFAULT_ENDPOINT, prefi
     # from os.environ)
     if not secret:
         source = username
-        key_to_username = utils.affix(prefix, 'OMNITURE_USERNAME', suffix)
-        key_to_secret = utils.affix(prefix, 'OMNITURE_SECRET', suffix)
+        key_to_username = affix(prefix, 'OMNITURE_USERNAME', suffix)
+        key_to_secret = affix(prefix, 'OMNITURE_SECRET', suffix)
         username = source[key_to_username]
         secret = source[key_to_secret]
 
