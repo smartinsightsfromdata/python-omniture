@@ -181,19 +181,6 @@ class Report(object):
         import pandas as pd
         return pd.DataFrame.from_dict(self.data)
 
-
-    def serialize(self, verbose=False):
-        if verbose:
-            facet = 'title'
-        else:
-            facet = 'id'
-
-        d = {}
-        for el in self.data:
-            key = getattr(el, facet)
-            d[key] = el.value
-        return d
-
     def __init__(self, raw, query):
         self.log = logging.getLogger(__name__)
         self.raw = raw
