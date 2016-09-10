@@ -1,5 +1,8 @@
+import datetime
+
 import unittest
 import omniture
+
 
 
 
@@ -31,3 +34,27 @@ class UtilTest(unittest.TestCase):
         """ Test the custom get item raises a problem when there are duplicate names """
         with self.assertRaises(KeyError):
              self.alist['abc']
+             
+    def test_wrap(self):
+        """Test the wrap method """
+        self.assertIsInstance(omniture.utils.wrap("test"),list)
+        self.assertIsInstance(omniture.utils.wrap(["test"]),list)
+        self.assertEqual(omniture.utils.wrap("test"),["test"])
+        self.assertEqual(omniture.utils.wrap(["test"]),["test"])
+
+    def test_date(self):
+        """Test the Date Method"""
+        test_date = "2016-09-01"
+        self.assertEqual(omniture.utils.date(None), None)
+        self.assertEqual(omniture.utils.date(test_date).strftime("%Y-%m-%d"),
+                         test_date)
+        d = datetime.date(2016,9,1)
+        self.assertEqual(omniture.utils.date(d).strftime("%Y-%m-%d"),
+                         test_date)
+        
+        self.assertEqual(omniture.utils.date(u"2016-09-01").strftime("%Y-%m-%d"),
+                         test_date)
+        with self.assertRaises(ValueError):
+            omniture.utils.date({})
+        
+        
