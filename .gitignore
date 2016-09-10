@@ -6,3 +6,4 @@ dist
 *.log
 .coverage
 coverage.xml
+htmlcov

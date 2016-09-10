@@ -6,7 +6,7 @@ import omniture
 
 
 
-class UtilTest(unittest.TestCase):
+class UtilsTest(unittest.TestCase):
     def setUp(self):
         fakelist = [{"id":"123", "title":"abc"},{"id":"456","title":"abc"}]
 
@@ -51,10 +51,37 @@ class UtilTest(unittest.TestCase):
         d = datetime.date(2016,9,1)
         self.assertEqual(omniture.utils.date(d).strftime("%Y-%m-%d"),
                          test_date)
+    
+        t = datetime.datetime(2016,9,1)
+        self.assertEqual(omniture.utils.date(t).strftime("%Y-%m-%d"),
+                         test_date)
         
         self.assertEqual(omniture.utils.date(u"2016-09-01").strftime("%Y-%m-%d"),
                          test_date)
         with self.assertRaises(ValueError):
             omniture.utils.date({})
+            
+    def test_affix(self):
+        """Test the Affix method to make sure it handles things correctly"""
+        p = "pre"
+        s = "suf"
+        v = "val"
+        con = "+"
         
+        self.assertEqual(omniture.utils.affix(p,v,connector=con),
+                         con.join([p,v]))
+        self.assertEqual(omniture.utils.affix(base=v,suffix=s,connector=con),
+                         con.join([v,s]))
+        self.assertEqual(omniture.utils.affix(p,v,s,connector=con),
+                         con.join([p,v,s]))
+        self.assertEqual(omniture.utils.affix(base=v,connector=con),
+                         con.join([v]))
+    
+    def test_translate(self):
+        """Test the translate method """
+        t = {"product":"cat_collar", "price":100, "location":"no where"}
+        m = {"product":"Product_Name","price":"Cost"}
+        s = {"Product_Name":"cat_collar", "Cost":100}
+        self.assertEqual(omniture.utils.translate(t,m),s)
+    
         
