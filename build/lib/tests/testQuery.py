@@ -197,6 +197,11 @@ class QueryTest(unittest.TestCase):
         report = self.analytics.suites[test_report_suite].report.granularity('year')
         self.assertEqual(report.raw['dateGranularity'], "year", "Yearly granularity can't be set via the granularity method")
 
+    def test_bad_granularity(self):
+        """ Make sure granularity works """
+        with self.assertRaises(ValueError):
+            self.analytics.suites[test_report_suite].report.granularity('bad')
+            
     #@unittest.skip("skip")
     def test_single_date_range(self):
         """ Make sure date range works with a single date """
@@ -235,7 +240,8 @@ class QueryTest(unittest.TestCase):
 
         testreport = self.analytics.suites[test_report_suite].jsonReport(report.json())
         self.assertEqual(report.json(),testreport.json(), "The reportings aren't deserializing from JSON the same old:{} new:{}".format(report.json(),testreport.json()))
-
+        self.assertEqual(report.json(),testreport.__str__(), "The reportings aren't deserializing to string __str__ the same old:{} new:{}".format(report.json(),testreport.__str__()))
+        
     @requests_mock.mock()
     def test_disable_validate_metric(self,m):
         """checks that the no validate flag works for metrics"""
@@ -327,21 +333,21 @@ class QueryTest(unittest.TestCase):
                          "the HTML isn't generating correctly: {}"
                          .format(test_html))
 
-        def test_repr_html_report_id(self):
-            """Make sure the HTML representation fo iPython is working corretly
-            with a report id"""
-            valid_html = "Current Report Settings</br><b>elements</b>: [{'id': 'page'}] </br><b>metrics</b>: [{'id': 'pageviews'}] </br><b>reportSuiteID</b>: "+test_report_suite+" </br>This report has been submitted</br><b>ReportId</b>: 123 </br>"
-            test_html = self.analytics.suites[test_report_suite]\
-                .report\
-                .element('page')\
-                .metric('pageviews')
-            test_html.id = "123"
-            test_html = test_html._repr_html_()
+    def test_repr_html_report_id(self):
+        """Make sure the HTML representation fo iPython is working corretly
+        with a report id"""
+        valid_html = "Current Report Settings</br><b>elements</b>: [{'id': 'page'}] </br><b>metrics</b>: [{'id': 'pageviews'}] </br><b>reportSuiteID</b>: "+test_report_suite+" </br>This report has been submitted</br><b>ReportId</b>: 123 </br>"
+        test_html = self.analytics.suites[test_report_suite]\
+            .report\
+            .element('page')\
+            .metric('pageviews')
+        test_html.id = "123"
+        test_html = test_html._repr_html_()
 
 
-            self.assertEqual(str(test_html),valid_html,
-                             "the HTML isn't generating correctly: {}"
-                             .format(test_html))
+        self.assertEqual(str(test_html),valid_html,
+                         "the HTML isn't generating correctly: {}"
+                         .format(test_html))
 
 
 if __name__ == '__main__':
