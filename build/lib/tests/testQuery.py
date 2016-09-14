@@ -181,6 +181,7 @@ class QueryTest(unittest.TestCase):
 
     
     def test_filter(self):
+        """ Make sure the filter command sets the segments right """
         report1 = self.analytics.suites[test_report_suite].report\
             .filter("s4157_55b1ba24e4b0a477f869b912")\
             .filter(segment = "s4157_56097427e4b0ff9bcc064952")
@@ -200,6 +201,30 @@ class QueryTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             report1.filter()
         
+        
+    def test_filter_disable_validation(self):
+        """ Make sure the filter command sets the segments 
+        right when validation is disabled"""
+        report1 = self.analytics.suites[test_report_suite].report\
+            .filter("s4157_55b1ba24e4b0a477f869b912", disable_validation=True)\
+            .filter(segment = "s4157_56097427e4b0ff9bcc064952",\
+                    disable_validation=True)
+        reportMultiple = self.analytics.suites[test_report_suite].report\
+            .filter(segments = ["s4157_55b1ba24e4b0a477f869b912","s4157_56097427e4b0ff9bcc064952"],\
+                    disable_validation=True)
+            
+        self.assertIn({'id': u's4157_55b1ba24e4b0a477f869b912'}\
+                      ,report1.raw['segments'], "Report1 failing")
+        self.assertIn({'id': u's4157_56097427e4b0ff9bcc064952'}\
+                      ,report1.raw['segments'], "report1 failing")
+        
+        self.assertIn({'id': u's4157_55b1ba24e4b0a477f869b912'}\
+                      ,reportMultiple.raw['segments'], "reportMultiple failing")
+        self.assertIn({'id': u's4157_56097427e4b0ff9bcc064952'}\
+                      ,reportMultiple.raw['segments'], "reportMultiple failing")
+        
+        with self.assertRaises(ValueError):
+            report1.filter()
         
 
     #@unittest.skip("skip")

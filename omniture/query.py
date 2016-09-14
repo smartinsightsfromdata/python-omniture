@@ -176,7 +176,7 @@ class Query(object):
 
         else:
             if segments:
-                self.raw['segments'].append(segments)
+                self.raw['segments'].extend([{"id":segment} for segment in segments])
             elif segment:
                 self.raw['segments'].append({"id":segment})
             elif kwargs:
