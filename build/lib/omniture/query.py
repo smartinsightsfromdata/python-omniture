@@ -165,7 +165,7 @@ class Query(object):
 
         if disable_validation == False:
             if segments:
-                self.raw['segments'].append(self._serialize_values(segments, 'segments'))
+                self.raw['segments'].extend(self._serialize_values(segments, 'segments'))
             elif segment:
                 self.raw['segments'].append({"id":self._normalize_value(segment,
                                                                             'segments').id})

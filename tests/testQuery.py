@@ -141,6 +141,18 @@ class QueryTest(unittest.TestCase):
                          5 ,
                          "The startingWith parameter isn't 5: {}"
                          .format(basic_report.raw['elements'][0]['startingWith']))
+    def test_set(self):
+        """ Make sure the set parameter can create custom parameters okay """
+        report = self.analytics.suites[test_report_suite].report\
+            .set('anomalyDetection',True)\
+            .set({"test":"abc","currentData":True})
+            
+        self.assertEqual(report.raw['anomalyDetection'], True)
+        self.assertEqual(report.raw['test'], "abc")
+        self.assertEqual(report.raw['currentData'], True)
+        
+        with self.assertRaises(ValueError):
+            report.set()
 
     @unittest.skip("don't have this one done yet")
     def test_anamoly_detection(self):
@@ -166,6 +178,29 @@ class QueryTest(unittest.TestCase):
         report = self.analytics.suites[test_report_suite].report.element('page').metric('pageviews').metric('visits').filter(element='page', selected=["test","test1"])
         self.assertEqual(report.raw['segments'][0]['element'], "page", "The inline segment element isn't getting set")
         self.assertEqual(report.raw['segments'][0]['selected'], ["test","test1"], "The inline segment selected field isn't getting set")
+
+    
+    def test_filter(self):
+        report1 = self.analytics.suites[test_report_suite].report\
+            .filter("s4157_55b1ba24e4b0a477f869b912")\
+            .filter(segment = "s4157_56097427e4b0ff9bcc064952")
+        reportMultiple = self.analytics.suites[test_report_suite].report\
+            .filter(segments = ["s4157_55b1ba24e4b0a477f869b912","s4157_56097427e4b0ff9bcc064952"])
+            
+        self.assertIn({'id': u's4157_55b1ba24e4b0a477f869b912'}\
+                      ,report1.raw['segments'], "Report1 failing")
+        self.assertIn({'id': u's4157_56097427e4b0ff9bcc064952'}\
+                      ,report1.raw['segments'], "report1 failing")
+        
+        self.assertIn({'id': u's4157_55b1ba24e4b0a477f869b912'}\
+                      ,reportMultiple.raw['segments'], "reportMultiple failing")
+        self.assertIn({'id': u's4157_56097427e4b0ff9bcc064952'}\
+                      ,reportMultiple.raw['segments'], "reportMultiple failing")
+        
+        with self.assertRaises(ValueError):
+            report1.filter()
+        
+        
 
     #@unittest.skip("skip")
     def test_hour_granularity(self):

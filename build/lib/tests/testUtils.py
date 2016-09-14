@@ -80,7 +80,7 @@ class UtilsTest(unittest.TestCase):
     def test_translate(self):
         """Test the translate method """
         t = {"product":"cat_collar", "price":100, "location":"no where"}
-        m = {"product":"Product_Name","price":"Cost"}
+        m = {"product":"Product_Name","price":"Cost","date":"Date"}
         s = {"Product_Name":"cat_collar", "Cost":100, "location":"no where"}
         self.assertEqual(omniture.utils.translate(t,m),s)
     
