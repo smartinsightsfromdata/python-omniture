@@ -211,10 +211,11 @@ class Query(object):
         #TODO allow this method to accept a list
         return self
 
-    @immutable
+
     def breakdown(self, element, **kwargs):
         """ Pass through for element. Adds an element to the report. """
         return self.element(element, **kwargs)
+
 
     def elements(self, *args, **kwargs):
         """ Shortcut for adding multiple elements. Doesn't support arguments """

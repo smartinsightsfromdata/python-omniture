@@ -124,7 +124,7 @@ class QueryTest(unittest.TestCase):
 
 
     #@unittest.skip("skip")
-    def test_element_paratmers(self):
+    def test_element_parameters(self):
         """Test the top and startingWith parameters
         """
         basic_report = self.analytics.suites[test_report_suite].report.element("page", top=5, startingWith=5)
@@ -141,6 +141,25 @@ class QueryTest(unittest.TestCase):
                          5 ,
                          "The startingWith parameter isn't 5: {}"
                          .format(basic_report.raw['elements'][0]['startingWith']))
+        
+    def test_breakown_parameters(self):
+        """Test the top and startingWith parameters
+        """
+        basic_report = self.analytics.suites[test_report_suite].report.breakdown("page", top=5, startingWith=5)
+
+        self.assertEqual(basic_report.raw['elements'][0]['id'],
+                         "page" ,
+                         "The parameters might have screwed this up: {}"
+                         .format(basic_report.raw['elements'][0]['id']))
+        self.assertEqual(basic_report.raw['elements'][0]['top'],
+                         5 ,
+                         "The top parameter isn't 5: {}"
+                         .format(basic_report.raw['elements'][0]['top']))
+        self.assertEqual(basic_report.raw['elements'][0]['startingWith'],
+                         5 ,
+                         "The startingWith parameter isn't 5: {}"
+                         .format(basic_report.raw['elements'][0]['startingWith']))
+        
     def test_set(self):
         """ Make sure the set parameter can create custom parameters okay """
         report = self.analytics.suites[test_report_suite].report\
@@ -175,7 +194,21 @@ class QueryTest(unittest.TestCase):
     #@unittest.skip("skip")
     def test_inline_segments(self):
         """ Make sure inline segments work """
-        report = self.analytics.suites[test_report_suite].report.element('page').metric('pageviews').metric('visits').filter(element='page', selected=["test","test1"])
+        report = self.analytics.suites[test_report_suite].report\
+            .element('page')\
+            .metric('pageviews')\
+            .metric('visits')\
+            .filter(element='page', selected=["test","test1"])
+        self.assertEqual(report.raw['segments'][0]['element'], "page", "The inline segment element isn't getting set")
+        self.assertEqual(report.raw['segments'][0]['selected'], ["test","test1"], "The inline segment selected field isn't getting set")
+
+    def test_inline_segments_disable_validation(self):
+        """ Make sure inline segments work with disable_validation = True """
+        report = self.analytics.suites[test_report_suite].report\
+            .element('page')\
+            .metric('pageviews')\
+            .metric('visits')\
+            .filter(element='page', selected=["test","test1"], disable_validation=True)
         self.assertEqual(report.raw['segments'][0]['element'], "page", "The inline segment element isn't getting set")
         self.assertEqual(report.raw['segments'][0]['selected'], ["test","test1"], "The inline segment selected field isn't getting set")
 
@@ -224,7 +257,7 @@ class QueryTest(unittest.TestCase):
                       ,reportMultiple.raw['segments'], "reportMultiple failing")
         
         with self.assertRaises(ValueError):
-            report1.filter()
+            report1.filter(disable_validation=True)
         
 
     #@unittest.skip("skip")
@@ -408,6 +441,30 @@ class QueryTest(unittest.TestCase):
         self.assertEqual(str(test_html),valid_html,
                          "the HTML isn't generating correctly: {}"
                          .format(test_html))
+        
+    def test_serialize_values(self):
+        """Test the serialize method """
+        
+        
+        single = self.analytics.suites[test_report_suite].report\
+            ._serialize_values("s4157_55b1ba24e4b0a477f869b912", 'segments')
+            
+        double = self.analytics.suites[test_report_suite].report\
+            ._serialize_values(["s4157_56097427e4b0ff9bcc064952"\
+                               ,"s4157_55b1ba24e4b0a477f869b912"], 'segments')
+            
+        self.assertEqual(single, [{'id':"s4157_55b1ba24e4b0a477f869b912"}])
+        self.assertEqual(double, [{'id':"s4157_56097427e4b0ff9bcc064952"},
+                                  {'id':"s4157_55b1ba24e4b0a477f869b912"}])
+        
+    def test_serialize(self):
+        l = self.analytics.suites[test_report_suite].report\
+            ._serialize(['1','2'])
+        obj = self.analytics.suites[test_report_suite].report\
+            ._serialize(omniture.Value('title',"id",{}))
+            
+        self.assertEqual(l, ['1','2'])
+        self.assertEqual(obj, {"id","id"})
 
 
 if __name__ == '__main__':
