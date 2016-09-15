@@ -95,8 +95,43 @@ class AccountTest(unittest.TestCase):
 
     def test_json_report(self):
         """Make sure reports can be generated from JSON objects"""
-        report = self.analytics.suites[test_report_suite].report.element('page').metric('pageviews').json()
+        report = self.analytics.suites[test_report_suite].report\
+            .element('page')\
+            .metric('pageviews')\
+            .sortBy('pageviews')\
+            .filter("s4157_55b1ba24e4b0a477f869b912")\
+            .range("2016-08-01","2016-08-31")\
+            .set('sortMethod',"top")
+            .json()
         self.assertEqual(report, self.analytics.jsonReport(report).json(), "The reports aren't serializating or de-serializing correctly in JSON")
+
+    
+    def test_account_repr_html_(self):
+        """Make sure the account are printing out in 
+            HTML correctly for ipython notebooks"""
+        html = self.analytics._repr_html_()
+        test_html = "<b>Username</b>: jgrover:Justin Grover</br><b>Secret</b>: ***************</br><b>Report Suites</b>: 2</br><b>Endpoint</b>: https://api.omniture.com/admin/1.4/rest/</br>"
+        self.assertEqual(html, test_html)
+        
+    def test_account__str__(self):
+        """ Make sure the custom str works """
+        mystr = self.analytics.__str__()
+        test_str = "Analytics Account -------------\n Username:             jgrover:Justin Grover \n Report Suites: 2 \n Endpoint: https://api.omniture.com/admin/1.4/rest/"
+        self.assertEqual(mystr, test_str)
+
+    def test_suite_repr_html_(self):
+        """Make sure the Report Suites are printing okay for 
+        ipython notebooks """
+        html = self.analytics.suites[0]._repr_html_()
+        test_html = "<td>omniture.api-gateway</td><td>test_suite</td>"
+        self.assertEqual(html, test_html)
+        
+    def test_suite__str__(self):
+        """Make sure the str represntation is working """
+        mystr = self.analytics.suites[0].__str__()
+        test_str = "ID omniture.api-gateway      | Name: test_suite \n"
+        self.assertEqual(mystr,test_str)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -464,7 +464,7 @@ class QueryTest(unittest.TestCase):
             ._serialize(omniture.Value('title',"id",{}))
             
         self.assertEqual(l, ['1','2'])
-        self.assertEqual(obj, {"id","id"})
+        self.assertEqual(list(obj), ["id"])
 
 
 if __name__ == '__main__':
