@@ -110,13 +110,13 @@ class AccountTest(unittest.TestCase):
         """Make sure the account are printing out in 
             HTML correctly for ipython notebooks"""
         html = self.analytics._repr_html_()
-        test_html = "<b>Username</b>: jgrover:Justin Grover</br><b>Secret</b>: ***************</br><b>Report Suites</b>: 2</br><b>Endpoint</b>: https://api.omniture.com/admin/1.4/rest/</br>"
+        test_html = "<b>Username</b>: jgrover:Justin Grover Demo</br><b>Secret</b>: ***************</br><b>Report Suites</b>: 2</br><b>Endpoint</b>: https://api.omniture.com/admin/1.4/rest/</br>"
         self.assertEqual(html, test_html)
         
     def test_account__str__(self):
         """ Make sure the custom str works """
         mystr = self.analytics.__str__()
-        test_str = "Analytics Account -------------\n Username:             jgrover:Justin Grover \n Report Suites: 2 \n Endpoint: https://api.omniture.com/admin/1.4/rest/"
+        test_str = "Analytics Account -------------\n Username:             jgrover:Justin Grover Demo\n Report Suites: 2 \n Endpoint: https://api.omniture.com/admin/1.4/rest/"
         self.assertEqual(mystr, test_str)
 
     def test_suite_repr_html_(self):
