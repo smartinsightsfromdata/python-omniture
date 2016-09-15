@@ -101,7 +101,7 @@ class AccountTest(unittest.TestCase):
             .sortBy('pageviews')\
             .filter("s4157_55b1ba24e4b0a477f869b912")\
             .range("2016-08-01","2016-08-31")\
-            .set('sortMethod',"top")
+            .set('sortMethod',"top")\
             .json()
         self.assertEqual(report, self.analytics.jsonReport(report).json(), "The reports aren't serializating or de-serializing correctly in JSON")
 
