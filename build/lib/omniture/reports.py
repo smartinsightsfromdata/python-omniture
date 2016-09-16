@@ -181,19 +181,6 @@ class Report(object):
         import pandas as pd
         return pd.DataFrame.from_dict(self.data)
 
-
-    def serialize(self, verbose=False):
-        if verbose:
-            facet = 'title'
-        else:
-            facet = 'id'
-
-        d = {}
-        for el in self.data:
-            key = getattr(el, facet)
-            d[key] = el.value
-        return d
-
     def __init__(self, raw, query):
         self.log = logging.getLogger(__name__)
         self.raw = raw
@@ -206,7 +193,7 @@ class Report(object):
             'metrics': ", ".join(map(str, self.metrics)),
             'elements': ", ".join(map(str, self.elements)),
         }
-        return "<omniture.Report (metrics) {metrics} (elements) {elements}>".format(**info)
+        return "<omniture.Report\n(metrics)\n{metrics}(elements)\n{elements}>".format(**info)
 
     def __div__(self):
         """ Give sensible options for Tab Completion mostly for iPython """
@@ -222,7 +209,7 @@ class Report(object):
                 html += "<tr>"
                 if 'datetime' in item:
                     html += "<td><b>{0}<b></td>".format('datetime')
-                for key in item:
+                for key in sorted(list(item.keys())):
                     if key != 'datetime':
                         html += "<td><b>{0}<b></td>".format(key)
                 html += "</tr><tr>"
@@ -230,9 +217,10 @@ class Report(object):
             #Make sure date time is alway listed first
             if 'datetime' in item:
                 html += "<td>{0}</td>".format(item['datetime'])
-            for key, value in item.iteritems():
+            for key, value in sorted(list(item.items())):
                 if key != 'datetime':
                     html += "<td>{0}</td>".format(value)
+        html += "</html>"
         return html
 
     def __str__(self):

@@ -165,7 +165,7 @@ class Query(object):
 
         if disable_validation == False:
             if segments:
-                self.raw['segments'].append(self._serialize_values(segments, 'segments'))
+                self.raw['segments'].extend(self._serialize_values(segments, 'segments'))
             elif segment:
                 self.raw['segments'].append({"id":self._normalize_value(segment,
                                                                             'segments').id})
@@ -176,7 +176,7 @@ class Query(object):
 
         else:
             if segments:
-                self.raw['segments'].append(segments)
+                self.raw['segments'].extend([{"id":segment} for segment in segments])
             elif segment:
                 self.raw['segments'].append({"id":segment})
             elif kwargs:
@@ -211,10 +211,11 @@ class Query(object):
         #TODO allow this method to accept a list
         return self
 
-    @immutable
+
     def breakdown(self, element, **kwargs):
         """ Pass through for element. Adds an element to the report. """
         return self.element(element, **kwargs)
+
 
     def elements(self, *args, **kwargs):
         """ Shortcut for adding multiple elements. Doesn't support arguments """
@@ -360,7 +361,7 @@ class Query(object):
                                       {'reportID': self.id})
     def json(self):
         """ Return a JSON string of the Request """
-        return str(json.dumps(self.build(), indent=4, separators=(',', ': ')))
+        return str(json.dumps(self.build(), indent=4, separators=(',', ': '), sort_keys=True))
 
     def __str__(self):
         return self.json()
