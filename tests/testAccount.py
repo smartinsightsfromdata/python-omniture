@@ -116,7 +116,7 @@ class AccountTest(unittest.TestCase):
     def test_account__str__(self):
         """ Make sure the custom str works """
         mystr = self.analytics.__str__()
-        test_str = "Analytics Account -------------\n Username:             jgrover:Justin Grover Demo\n Report Suites: 2 \n Endpoint: https://api.omniture.com/admin/1.4/rest/"
+        test_str = "Analytics Account -------------\n Username:             jgrover:Justin Grover Demo \n Report Suites: 2 \n Endpoint: https://api.omniture.com/admin/1.4/rest/"
         self.assertEqual(mystr, test_str)
 
     def test_suite_repr_html_(self):
