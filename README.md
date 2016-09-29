@@ -18,6 +18,8 @@ Through PyPI (older version):
 Latest and greatest:
 
     pip install git+http://github.com/dancingcactus/python-omniture.git
+    
+    supports python 2.7 and 3.5+
 
 ## Authentication
 
