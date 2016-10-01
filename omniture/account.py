@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import requests
 import binascii
-import sha
+# import sha
 import json
 from datetime import datetime, date
 import logging
